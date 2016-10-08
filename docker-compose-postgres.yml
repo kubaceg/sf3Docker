@@ -1,14 +1,13 @@
 version: '2'
 services:
-    mysql_db:
-        image: percona
+    postgres_db:
+        image: postgres
         ports:
-            - "3306:3306"
+            - "5432:5432"
         environment:
-            MYSQL_ROOT_PASSWORD: root
-            MYSQL_DATABASE: symfony
-            MYSQL_USER: root
-            MYSQL_PASSWORD: root
+            POSTGRES_DB: symfony
+            POSTGRES_USER: root
+            POSTGRES_PASSWORD: root
     php:
         build: ./php-fpm
         expose:
