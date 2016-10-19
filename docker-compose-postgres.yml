@@ -16,7 +16,7 @@ services:
             - ./symfony:/var/www/symfony
             - ./logs/symfony:/var/www/symfony/app/logs
         links:
-            - db
+            - postgres_db
     nginx:
         build: ./nginx
         ports:
