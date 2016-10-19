@@ -17,7 +17,7 @@ services:
             - ./symfony:/var/www/symfony
             - ./logs/symfony:/var/www/symfony/app/logs
         links:
-            - db
+            - mysql_db
     nginx:
         build: ./nginx
         ports:
