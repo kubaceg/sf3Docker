@@ -2,13 +2,24 @@ FROM php:7.0-fpm-alpine
 
 MAINTAINER Jakub Cegiełka <kuba.ceg@gmail.com>
 
-# RUN apk add --update \
-#     php7-bcmath \
-#     php7-mbstring
-
-
-RUN rm -rf /var/cache/apk/* && rm -rf /tmp/*
+RUN apk update \
+    && apk add  --no-cache git mysql-client curl libmcrypt libmcrypt-dev openssh-client icu-dev \
+    libxml2-dev freetype-dev libpng-dev libjpeg-turbo-dev g++ make autoconf \
+    && docker-php-source extract \
+    && pecl install xdebug redis \
+    && docker-php-ext-enable xdebug redis \
+    && docker-php-source delete \
+    && docker-php-ext-install mcrypt pdo_mysql soap intl zip \
+    && echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.remote_autostart=off" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.remote_port=10000" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.remote_handler=dbgp" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.remote_connect_back=0" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+    && rm -rf /tmp/*
 
 CMD ["php-fpm", "-F"]
+
+WORKDIR /var/www/symfony
 
 EXPOSE 9000
